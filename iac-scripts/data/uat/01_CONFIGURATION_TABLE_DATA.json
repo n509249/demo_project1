@@ -1,0 +1,16 @@
+{
+	"uat-Customer-demoproject_search-configuration": [{
+		"PutRequest": {
+			"Item": {
+				
+			}
+		}
+	},
+	{
+		"PutRequest": {
+			"Item": {
+				
+			}
+		}
+	}]
+}
