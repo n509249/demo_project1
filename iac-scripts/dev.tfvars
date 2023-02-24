@@ -2,7 +2,7 @@
 ###       Lambda Variables         ###
 ######################################
 function_name      = "dev-Customer-demoproject_search"
-function_filename  = "../microservices/build/libs/Demoproject-prl-batch-1.0.0-SNAPSHOT.jar"
+#function_filename  = "../microservices/build/libs/Demoproject-prl-batch-1.0.0-SNAPSHOT.jar"
 handler            = ""
 function_runtime   = "java11"
 lambda_memory_size = 512
