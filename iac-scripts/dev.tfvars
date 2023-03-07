@@ -5,7 +5,7 @@
 ###  Refer variables.tf for examples  ###
 #########################################
 s3 = [{
-  bucket_name        = ""
+  bucket_name        = "dem0123"
   versioning_enabled = true
   encryption_enabled = true
   lifecycle_rules    = []
