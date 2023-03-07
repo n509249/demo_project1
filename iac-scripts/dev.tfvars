@@ -1,11 +1,10 @@
-
 //If s3 is not available for your interface. Please remove below variables
 #########################################
 ###         S3 Variables              ###
 ###  Refer variables.tf for examples  ###
 #########################################
 s3 = [{
-  bucket_name        = "dem0123"
+  bucket_name        = "dem01234"
   versioning_enabled = true
   encryption_enabled = true
   lifecycle_rules    = []
