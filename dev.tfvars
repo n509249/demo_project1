@@ -2,7 +2,7 @@
 ###       IAM Glue Variables       ###
 ######################################
 
-glue_database_name = "dev-cpm-report-automation_database"
+glue_database_name = "dev-cpm-report-automation_database1"
 
 ######################################
 ###       IAM Glue Variables       ###

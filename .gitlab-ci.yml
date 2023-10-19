@@ -13,8 +13,7 @@
     - *deploy_job_secrets
   script:
     - terraform init
-    - terraform plan -out=plan.out -var-file=dev.tfvars
-    - terraform apply "plan.out"
+    - terraform apply -input=false -auto-approve -var-file="$CI_ENVIRONMENT_NAME.tfvars"
 
 stages:
   - DEV_DEPLOY
