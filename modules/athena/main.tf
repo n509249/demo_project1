@@ -37,9 +37,9 @@ resource "null_resource" "athena_tables" {
   provisioner "local-exec" {
     command = <<-EOT
     for file in ./table_creation/${var.alias_name}/*.sql; do
-    query=\$(cat "\$file")
+    query=$(cat "$file")
     aws athena start-query-execution \
-    --query-string="\$query" \
+    --query-string="$query" \
     --query-execution-context Database=${var.glue_database_name} \
     --result-configuration OutputLocation=${var.s3_output_location}
     done
