@@ -17,7 +17,7 @@ iam_glue_roles = [
     secrets_manager_permission  = "",
     lambda_function_permission  = "",
     lambda_function_alias       = "",
-    database_permission         = ["dev-cpm-report-automation_database"],
+    database_permission         = ["dev-cpm-report-automation_database1"],
     tags                        = {}
   }
 ]
@@ -32,7 +32,7 @@ iam_glue_role = "dev-cpm-report-automation_poc_role"
 classifiers = []
 crawler_scheduler = ""
 recrawl_policy = "CRAWL_EVERYTHING"
-glue_database_name = "dev-cpm-report-automation_database"
+glue_database_name = "dev-cpm-report-automation_database1"
 s3_target_bucket = "dev-cpm-reporting-poc-s3/"
 sample_size = 1
 tags = {}
