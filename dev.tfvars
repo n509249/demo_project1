@@ -44,7 +44,7 @@ tags = {}
 ######################################
 
 athena_workgroup   = "dev-cust360-cpm-automation-workgroup"
-alias_name ="dev"
+#alias_name ="dev"
 #glue_database_name     = "dev-cpm-report-automation_database"
 source_s3          = "dev-cpm-reporting-poc-s3"
 athena_state       = "ENABLED"
