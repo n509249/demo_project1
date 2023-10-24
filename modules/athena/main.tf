@@ -30,13 +30,13 @@ data "aws_s3_bucket" "bucket" {
   }
 }*/
 
-resource "null_resource" "athena_tables" {
+/*resource "null_resource" "athena_tables" {
   triggers = {
     always_run = timestamp()
   }
   provisioner "local-exec" {
     command = <<-EOT
-    for file in ./table_creation/${var.alias_name}/*.sql; do
+    for file in ./table_creation/${var.alias_name}*//*.sql; do
     query=$(cat "$file")
     aws athena start-query-execution \
     --query-string="$query" \
@@ -45,7 +45,7 @@ resource "null_resource" "athena_tables" {
     done
   EOT
   }
-}
+}*/
 
 
 
