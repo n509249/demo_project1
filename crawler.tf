@@ -1,9 +1,7 @@
 module "glue-crawler" {
   source = "./modules/glue-crawler"
-  depends_on = [
-    module.iam-glue]
+  depends_on = [module.iam-glue]
   count = length(var.crawlers)
-  #name = var.crawlers[count.index].glue_database_name
   crawler_name = var.crawlers[count.index].crawler_name
   iam_glue_role = var.crawlers[count.index].iam_glue_role
   classifiers = var.crawlers[count.index].classifiers
