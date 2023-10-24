@@ -4,6 +4,7 @@ variable "athena_workgroup" {
 /*variable "athena_db_name" {
   type = string
 }*/
+
 /*variable "source_s3" {
   type = string
 }*/

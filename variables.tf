@@ -40,9 +40,9 @@ variable "athena_workgroup" {
   type = string
 }
 
-variable "source_s3" {
+/*variable "source_s3" {
   type = string
-}
+}*/
 variable "athena_state" {
   type = string
 }
