@@ -1,0 +1,67 @@
+.aws_secrets: &deploy_job_secrets
+  - >
+    STS=($(aws sts assume-role-with-web-identity
+    --role-arn ${ROLE_ARN}
+    --role-session-name "gitlab-${CI_PROJECT_ID}-${CI_PIPELINE_ID}"
+    --web-identity-token ${CI_JOB_JWT_V2}
+    --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]'
+    --output text))
+  - export AWS_ACCESS_KEY_ID="${STS[0]}"
+  - export AWS_SECRET_ACCESS_KEY="${STS[1]}"
+  - export AWS_SESSION_TOKEN="${STS[2]}"
+  - aws sts get-caller-identity
+
+stages:
+  - DISABLE_EVENT_RULE
+  - ENABLE_EVENT_RULE
+
+cpm-event-bridge-disable:
+  stage: DISABLE_EVENT_RULE
+  image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-terraform-image:2
+  variables:
+    ROLE_ARN: $dev_ROLE_ARN
+  environment:
+    name: live
+  before_script:
+    - *deploy_job_secrets
+  script: |
+    file="eventrule_name.txt"
+    file1="alarm.txt"
+    while IFS= read -r eventrule_name && IFS= read -r alarm_name <&3;
+    aws cloudwatch disable-alarm-actions --alarm-names "$alarm_name"
+    RULE_STATE=$(aws events describe-rule --name "$eventrule_name" --query 'State' --output text)
+    echo "$eventrule_name : $RULE_STATE"
+    if [ "$RULE_STATE" = "ENABLED" ]; then
+      aws events disable-rule --name "$eventrule_name"
+      echo "$eventrule_name" >> specific_value.txt
+          fi
+    done < $file 3< $file1
+  artifacts:
+    when: always
+    paths:
+      - specific_value.txt
+  when: manual
+
+
+cpm-event-bridge-enable:
+  stage: ENABLE_EVENT_RULE
+  image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-terraform-image:2
+  variables:
+    ROLE_ARN: $dev_ROLE_ARN
+  environment:
+    name: live
+  before_script:
+    - *deploy_job_secrets
+  script: |
+    file="./specific_value.txt"
+    file1="alarm.txt"
+    while IFS= read -r eventrule_name && IFS= read -r alarm_name <&3;
+    aws cloudwatch disable-alarm-actions --alarm-names "$alarm_name"
+    RULE_STATE=$(aws events describe-rule --name "$eventrule_name" --query 'State' --output text)
+    echo "$eventrule_name : $RULE_STATE"
+    aws events enable-rule --name "$eventrule_name"
+    done < $file 3< $file1
+  dependencies:
+    - cpm-event-bridge-disable
+  when: manual
+
