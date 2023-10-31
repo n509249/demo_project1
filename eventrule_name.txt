@@ -1,2 +1,1 @@
 Dev_eventbridge-rule
-Dev_eventbridge_test
