@@ -36,6 +36,7 @@ cpm-event-bridge-disable:
       aws events disable-rule --name "$eventrule_name"
       echo "$eventrule_name" >> specific_value.txt
           fi
+       fi
     done < $file 3< $file1
   artifacts:
     when: always
