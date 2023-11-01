@@ -19,7 +19,7 @@ cpm-event-bridge-disable:
   stage: DISABLE_EVENT_RULE
   image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-terraform-image:2
   variables:
-    ROLE_ARN: $live_ROLE_ARN
+    ROLE_ARN: $dev_ROLE_ARN
   environment:
     name: live
   before_script:
@@ -61,7 +61,7 @@ cpm-event-bridge-enable:
   stage: ENABLE_EVENT_RULE
   image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-terraform-image:2
   variables:
-    ROLE_ARN: $live_ROLE_ARN
+    ROLE_ARN: $dev_ROLE_ARN
   environment:
     name: live
   before_script:
