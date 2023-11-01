@@ -42,6 +42,7 @@ cpm-event-bridge-disable:
 
 cpm-alarms-disable:
   stage: DISABLE_EVENT_RULE
+  needs: ["cpm-event-bridge-disable"]
   image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-terraform-image:2
   variables:
     ROLE_ARN: $dev_ROLE_ARN
@@ -54,12 +55,10 @@ cpm-alarms-disable:
     while read alarm_name; do
     aws cloudwatch disable-alarm-actions --alarm-names "$alarm_name"
     done < $file
-  dependencies:
-    - cpm-event-bridge-disable
-
 
 cpm-event-bridge-enable:
   stage: ENABLE_EVENT_RULE
+  needs: ["cpm-event-bridge-disable"]
   image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-terraform-image:2
   variables:
     ROLE_ARN: $dev_ROLE_ARN
@@ -80,6 +79,7 @@ cpm-event-bridge-enable:
 
 cpm-alarms-enable:
   stage: ENABLE_EVENT_RULE
+  needs: ["cpm-event-bridge-enable"]
   image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-terraform-image:2
   variables:
     ROLE_ARN: $dev_ROLE_ARN
@@ -92,5 +92,3 @@ cpm-alarms-enable:
     while read alarm_name; do
     aws cloudwatch enable-alarm-actions --alarm-names "$alarm_name"
     done < $file
-  dependencies:
-    - cpm-event-bridge-enable
