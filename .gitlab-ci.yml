@@ -19,32 +19,29 @@ cpm-event-bridge-disable:
   stage: DISABLE_EVENT_RULE
   image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-terraform-image:2
   variables:
-    ROLE_ARN: $dev_ROLE_ARN
+    ROLE_ARN: $live_ROLE_ARN
   environment:
     name: live
   before_script:
     - *deploy_job_secrets
   script: |
     file="eventrule_name.txt"
-    file1="alarm.txt"
-    while IFS= read -r alarm_name || IFS= read -r eventrule_name <&3;do
-    aws cloudwatch disable-alarm-actions --alarm-names "$alarm_name"
+    while read eventrule_name; do
     RULE_STATE=$(aws events describe-rule --name "$eventrule_name" --query 'State' --output text)
     echo "$eventrule_name : $RULE_STATE"
     if [ "$RULE_STATE" = "ENABLED" ]; then
       aws events disable-rule --name "$eventrule_name"
       echo "$eventrule_name" >> specific_value.txt
           fi
-    done < $file1 3< $file
+    done < $file
   artifacts:
     when: always
     paths:
       - specific_value.txt
   when: manual
 
-
-cpm-event-bridge-enable:
-  stage: ENABLE_EVENT_RULE
+cpm-alarms-disable:
+  stage: DISABLE_EVENT_RULE
   image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-terraform-image:2
   variables:
     ROLE_ARN: $dev_ROLE_ARN
@@ -53,14 +50,29 @@ cpm-event-bridge-enable:
   before_script:
     - *deploy_job_secrets
   script: |
+    file="alarm.txt"
+    while read alarm_name; do
+    aws cloudwatch disable-alarm-actions --alarm-names "$alarm_name"
+    done < $file
+  when: manual
+
+
+cpm-event-bridge-enable:
+  stage: ENABLE_EVENT_RULE
+  image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-terraform-image:2
+  variables:
+    ROLE_ARN: $live_ROLE_ARN
+  environment:
+    name: live
+  before_script:
+    - *deploy_job_secrets
+  script: |
     file="./specific_value.txt"
-    file1="alarm.txt"
-    while IFS= read -r eventrule_name || IFS= read -r alarm_name <&3;do
-    aws cloudwatch enable-alarm-actions --alarm-names "$alarm_name"
+    while read eventrule_name; do
     RULE_STATE=$(aws events describe-rule --name "$eventrule_name" --query 'State' --output text)
     echo "$eventrule_name : $RULE_STATE"
     aws events enable-rule --name "$eventrule_name"
-    done < $file 3< $file1
+    done < $file
   dependencies:
     - cpm-event-bridge-disable
   when: manual
