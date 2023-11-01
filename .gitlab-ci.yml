@@ -29,6 +29,7 @@ cpm-event-bridge-disable:
     file1="alarm.txt"
     while IFS= read -r eventrule_name && IFS= read -r alarm_name <&3;do
     aws cloudwatch disable-alarm-actions --alarm-names "$alarm_name"
+    if [ "$eventrule_name" != "" ]; then
     RULE_STATE=$(aws events describe-rule --name "$eventrule_name" --query 'State' --output text)
     echo "$eventrule_name : $RULE_STATE"
     if [ "$RULE_STATE" = "ENABLED" ]; then
