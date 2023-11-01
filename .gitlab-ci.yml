@@ -54,7 +54,8 @@ cpm-alarms-disable:
     while read alarm_name; do
     aws cloudwatch disable-alarm-actions --alarm-names "$alarm_name"
     done < $file
-  when: manual
+  dependencies:
+    - cpm-event-bridge-disable
 
 
 cpm-event-bridge-enable:
@@ -77,3 +78,19 @@ cpm-event-bridge-enable:
     - cpm-event-bridge-disable
   when: manual
 
+cpm-alarms-enable:
+  stage: ENABLE_EVENT_RULE
+  image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-terraform-image:2
+  variables:
+    ROLE_ARN: $dev_ROLE_ARN
+  environment:
+    name: live
+  before_script:
+    - *deploy_job_secrets
+  script: |
+    file="alarm.txt"
+    while read alarm_name; do
+    aws cloudwatch enable-alarm-actions --alarm-names "$alarm_name"
+    done < $file
+  dependencies:
+    - cpm-event-bridge-enable
