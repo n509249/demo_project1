@@ -53,6 +53,7 @@ cpm-alarms-disable:
   script: |
     file="alarm.txt"
     while read alarm_name; do
+    aws cloudwatch describe-alarm-history --alarm-names "$alarm_name"
     aws cloudwatch disable-alarm-actions --alarm-names "$alarm_name"
     done < $file
 
