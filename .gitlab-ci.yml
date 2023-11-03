@@ -49,7 +49,6 @@ cpm-alarms-disable:
     name: live
   before_script:
     - *deploy_job_secrets
-    - apk add jq
   script: |
     file="alarm.txt"
     while read alarm_name; do
