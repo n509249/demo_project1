@@ -42,7 +42,6 @@ cpm-event-bridge-disable:
 
 cpm-alarms-disable:
   stage: DISABLE_EVENT_RULE
-  needs: ["cpm-event-bridge-disable"]
   image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-terraform-image:2
   variables:
     ROLE_ARN: $dev_ROLE_ARN
@@ -50,10 +49,11 @@ cpm-alarms-disable:
     name: live
   before_script:
     - *deploy_job_secrets
+    - apk add jq
   script: |
     file="alarm.txt"
     while read alarm_name; do
-    aws cloudwatch describe-alarms --alarm-names "$alarm_name"
+    aws cloudwatch describe-alarms --alarm-names "$alarm_name" | jq -r '.MetricAlarms[0].ActionsEnabled'
     aws cloudwatch disable-alarm-actions --alarm-names "$alarm_name"
     done < $file
 
@@ -80,7 +80,6 @@ cpm-event-bridge-enable:
 
 cpm-alarms-enable:
   stage: ENABLE_EVENT_RULE
-  needs: ["cpm-event-bridge-enable"]
   image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-terraform-image:2
   variables:
     ROLE_ARN: $dev_ROLE_ARN
