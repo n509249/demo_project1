@@ -42,7 +42,7 @@ cpm-event-bridge-disable:
 
 cpm-alarms-disable:
   stage: DISABLE_EVENT_RULE
-  image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-terraform-image:2
+  image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-jq-image:1
   variables:
     ROLE_ARN: $dev_ROLE_ARN
   environment:
