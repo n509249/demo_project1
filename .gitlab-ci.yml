@@ -42,6 +42,7 @@ cpm-event-bridge-disable:
 
 cpm-alarms-disable:
   stage: DISABLE_EVENT_RULE
+  needs: ["cpm-event-bridge-disable"]
   image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-jq-image:1
   variables:
     ROLE_ARN: $dev_ROLE_ARN
@@ -52,9 +53,16 @@ cpm-alarms-disable:
   script: |
     file="alarm.txt"
     while read alarm_name; do
-    aws cloudwatch describe-alarms --alarm-names "$alarm_name" | jq -r '.MetricAlarms[0].ActionsEnabled'
+    ALARM_STATE=$(aws cloudwatch describe-alarms --alarm-names "$alarm_name" | jq -r '.MetricAlarms[0].ActionsEnabled')
+    if [ "$ALARM_STATE" = true ]; then
     aws cloudwatch disable-alarm-actions --alarm-names "$alarm_name"
+    echo "$alarm_name" >> specific_value1.txt
+    fi
     done < $file
+  artifacts:
+    when: always
+    paths:
+      - specific_value1.txt
 
 cpm-event-bridge-enable:
   stage: ENABLE_EVENT_RULE
@@ -79,6 +87,7 @@ cpm-event-bridge-enable:
 
 cpm-alarms-enable:
   stage: ENABLE_EVENT_RULE
+  needs: ["cpm-event-bridge-enable"]
   image: registry.gitlab.com/iairgroup/iag/utl/framework/gitlab/artifact-repository-group/artifact-repository/awscli-terraform-image:2
   variables:
     ROLE_ARN: $dev_ROLE_ARN
@@ -87,8 +96,9 @@ cpm-alarms-enable:
   before_script:
     - *deploy_job_secrets
   script: |
-    file="alarm.txt"
+    file="./specific_value1.txt"
     while read alarm_name; do
     aws cloudwatch enable-alarm-actions --alarm-names "$alarm_name"
     done < $file
-  when: manual
+  dependencies:
+    - cpm-alarms-disable
