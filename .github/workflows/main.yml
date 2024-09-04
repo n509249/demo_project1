@@ -1,0 +1,48 @@
+name: feature
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "develop"]
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  USERNAME: ${{ github.actor }}
+  TOKEN: ${{ secrets.GH_TOKEN }}
+  GITHUBURL: "https://maven.pkg.github.com/BritishAirways-Ent/myidtravel-package-registry"
+
+jobs:
+  dev-deploy:
+    environment: dev
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+        working-directory: .
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials from AWS account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE }}
+          aws-region: ${{ secrets.AWS_REGION }}
+          role-session-name: GitHub-OIDC-TERRAFORM
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.2.5
+
+      - name: Terraform Init & deploy
+        id: terraform_init_and_deploy
+        env:
+          TF_CLI_ARGS_init: ${{ secrets.TF_CLI_ARGS_init }}
+        run: |
+          aws apigateway get-resources --rest-api-id rtwa0nurbf --query "items[?path=='/v1/sqs-enqueuer'].id"
+
