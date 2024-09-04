@@ -43,4 +43,4 @@ jobs:
         env:
           TF_CLI_ARGS_init: ${{ secrets.TF_CLI_ARGS_init }}
         run: |
-          aws apigateway get-resources --rest-api-id rtwa0nurbf --query "items[?path=='/v1/sqs-enqueuer'].id" --output text
+          aws apigateway get-resources --rest-api-id rtwa0nurbf --query "items[?path=='/v1/sqs-enqueuer'].id"
