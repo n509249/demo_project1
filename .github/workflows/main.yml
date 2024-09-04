@@ -45,6 +45,6 @@ jobs:
           TF_CLI_ARGS_init: ${{ secrets.TF_CLI_ARGS_init }}
         run: |
           Resource_ID=$(aws apigateway update-method --rest-api-id rtwa0nurbf --resource-id eu2daw --http-method POST --patch-operations op=replace,path=/requestModels/application~1json,value=Empty)
-          #echo "$Resource_ID"
+          echo "$Resource_ID"
 
 
