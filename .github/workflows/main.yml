@@ -48,6 +48,8 @@ jobs:
           echo "$Rest_API_ID"
           Resource_ID=$(aws apigateway get-resources --rest-api-id rtwa0nurbf --query "items[?path=='/sqs-enqueuer'].id" --output text)
           echo "$Resource_ID"
+          aws apigateway update-method --rest-api-id $Rest_API_ID --resource-id $Resource_ID --http-method POST --patch-operations op=replace,path=/requestModels/application~1json,value=DutyTravelModule
+
 
 
 
