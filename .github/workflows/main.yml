@@ -44,10 +44,10 @@ jobs:
         env:
           TF_CLI_ARGS_init: ${{ secrets.TF_CLI_ARGS_init }}
         run: |
-          Rest_API_ID = $(aws apigateway get-rest-apis query "items[?name=='DutyTravelAPI'].id" --output text)
+          Rest_API_ID=$(aws apigateway get-rest-apis --query "items[?name=='DutyTravelAPI'].id" --output text)
+          echo "$Rest_API_ID"
           Resource_ID=$(aws apigateway get-resources --rest-api-id rtwa0nurbf --query "items[?path=='/sqs-enqueuer'].id" --output text)
           echo "$Resource_ID"
-          echo "$Rest_API_ID"
 
 
 
