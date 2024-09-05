@@ -48,7 +48,7 @@ jobs:
           echo "$Rest_API_ID"
           Resource_ID=$(aws apigateway get-resources --rest-api-id $Rest_API_ID --query "items[?path=='/v1/crevoucher2'].id" --output text)
           echo "$Resource_ID"
-          aws apigateway update-method --rest-api-id $Rest_API_ID --resource-id $Resource_ID --http-method POST --patch-operations op=add,path=/requestModels/application~1json,value=DutyTravelModule
+          aws apigateway update-method --rest-api-id $Rest_API_ID --resource-id $Resource_ID --http-method POST --patch-operations op=add,path=/requestModels/application~1json,value=Empty5
 
 
 
