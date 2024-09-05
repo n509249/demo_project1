@@ -44,7 +44,7 @@ jobs:
         env:
           TF_CLI_ARGS_init: ${{ secrets.TF_CLI_ARGS_init }}
         run: |
-          Resource_ID=$(aws apigateway get-resources --rest-api-id rtwa0nurbf --query "items[?path=='/v1/sqs-enqueuer'].id" --output text)
+          Resource_ID=$(aws apigateway get-resources --rest-api-id rtwa0nurbf --query "items[?path=='/sqs-enqueuer'].id" --output text)
           echo "$Resource_ID"
 
 
