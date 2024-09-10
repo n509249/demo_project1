@@ -1,4 +1,4 @@
-name: feature2
+name: feature
 
 on:
   workflow_dispatch:
